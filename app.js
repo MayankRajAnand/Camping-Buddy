@@ -15,24 +15,19 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
+const mongoURI = process.env.MONGO_CONNECT;
 const PORT = process.env.PORT || 8080;
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-});
+mongoose.connect(mongoURI, { useUnifiedTopology: true }
+);
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Database connected");
-});
-
+const connection = mongoose.connection;
+connection.once('open', () => {
+    console.log("MongoDB database connection established successfully");
+})
 const app = express();
 
 app.engine('ejs', ejsMate)
